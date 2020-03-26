@@ -18,7 +18,7 @@ public class DriversListCollection implements DriversList {
 
     @Override
     public void removeDriver(Driver driver) {
-        drivers.removeAll(driver);
+        drivers.remove(driver);
     }
 
     @Override
