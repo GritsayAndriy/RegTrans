@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="237.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ListView fx:id="listDrivers" prefHeight="291.0" prefWidth="237.0" VBox.vgrow="ALWAYS" />
+      <HBox prefHeight="25.0" prefWidth="237.0">
+         <children>
+            <Button fx:id="btnAddDriver" mnemonicParsing="false" onAction="#openAddDriver" prefHeight="25.0" prefWidth="75.0" text="Додати" HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnEditDriver" mnemonicParsing="false" onAction="#openEditDriver" prefHeight="25.0" prefWidth="94.0" text="Редагувати" />
+            <Button fx:id="btnDeleteDriver" mnemonicParsing="false" onAction="#deleteDriver" text="Видалити" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

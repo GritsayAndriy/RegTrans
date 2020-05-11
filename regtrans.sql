@@ -26,4 +26,16 @@ CREATE TABLE time_sheet (
 
 select * from time_sheet;
 select * from drivers;
-select * from time_sheet;
+select * from transports;
+drop table transport;
+
+insert into transports (brand, model, number, type_transport, type_fuel, static_use_fuel)
+values("maz", "model1", "1234", "Gruz", "gaz", "1");
+
+
+insert into time_sheet (day_date, driver, transport, use_fuel, result_work)
+values("2020-04-04", "4", "3", "12", "320");
+
+
+insert into drivers (full_name, transport)
+values("Andriy", "1");
