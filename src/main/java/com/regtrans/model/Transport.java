@@ -2,7 +2,6 @@ package com.regtrans.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,8 +14,8 @@ public class Transport {
     private String model;
     private String number;
     private Integer typeTransport;
-    private Integer typeFlue;
-    private Integer staticUseFuel;
+    private TypeFuel typeFuel;
+    private Double staticUseFuel;
 
     private Set<Driver> drivers = new HashSet<>();
     private Set<TimeSheet> timeSheets = new HashSet<>();
@@ -80,25 +79,25 @@ public class Transport {
 
 
 
-
-    @Column (name = "type_fuel")
-    public Integer getTypeFlue() {
-        return typeFlue;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_fuel")
+    public TypeFuel getTypeFuel() {
+        return typeFuel;
     }
 
-    public void setTypeFlue(Integer typeFlue) {
-        this.typeFlue = typeFlue;
+    public void setTypeFuel(TypeFuel typeFuel) {
+        this.typeFuel = typeFuel;
     }
 
 
 
 
     @Column (name = "static_use_fuel")
-    public Integer getStaticUseFuel() {
+    public Double getStaticUseFuel() {
         return staticUseFuel;
     }
 
-    public void setStaticUseFuel(Integer staticUseFuel) {
+    public void setStaticUseFuel(Double staticUseFuel) {
         this.staticUseFuel = staticUseFuel;
     }
 
@@ -146,14 +145,6 @@ public class Transport {
  */
     @Override
     public String toString() {
-        return "Transport{" +
-                "transportId=" + transportId +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", number='" + number + '\'' +
-                ", typeTransport=" + typeTransport +
-                ", typeFlue=" + typeFlue +
-                ", staticUseFuel=" + staticUseFuel +
-                '}';
+        return getBrand()+" "+ getModel();
     }
 }

@@ -9,10 +9,9 @@
         <property name="hibernate.format_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.SQLiteDialect</property>
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:D:/test/develop.regtrans/src/main/resources/db/sqlite.db</property>
+        <property name="hibernate.connection.url">jdbc:sqlite:regtransdb.db</property>
         <property name="hibernate.connection.username"></property>
         <property name="hibernate.connection.password"></property>
-        <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.connection.autocommit">true</property>
 
     </session-factory>

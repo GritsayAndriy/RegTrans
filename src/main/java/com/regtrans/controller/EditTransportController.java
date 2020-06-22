@@ -1,0 +1,239 @@
+package com.regtrans.controller;
+
+import com.regtrans.model.Transport;
+import com.regtrans.model.TypeFuel;
+import com.regtrans.service.TransportService;
+import com.regtrans.service.TypeFuelService;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import net.rgielen.fxweaver.core.FxmlView;
+import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.sql.SQLException;
+
+@Component
+@FxmlView("add_transport.fxml")
+public class EditTransportController {
+
+    private TransportService transportService;
+    private TypeFuelService typeFuelService;
+
+    @FXML
+    private TextField fieldBrand;
+
+    @FXML
+    private TextField fieldModel;
+
+    @FXML
+    private TextField fieldNumber;
+
+    @FXML
+    private ComboBox<String> comboBoxTypeTransport;
+
+    @FXML
+    private ComboBox<TypeFuel> comboBoxTypeFlue;
+
+    @FXML
+    private TextField fieldStaticUseFlue;
+
+    @FXML
+    private Button btnAddTransport;
+
+    @FXML
+    private Button btnCancel;
+
+    @FXML
+    private ListView<Transport> transportsListView;
+
+    @FXML
+    private Button btnDeleteTransport;
+
+    @FXML
+    private Button btnUpdateTransport;
+
+    private ObservableList<Transport> transportsObservableList = FXCollections.observableArrayList();
+    private ObservableList<TypeFuel> typeFuelObservableList = FXCollections.observableArrayList();
+
+    @Autowired
+    public EditTransportController(TransportService transportService, TypeFuelService typeFuelService) {
+        this.transportService = transportService;
+        this.typeFuelService = typeFuelService;
+    }
+
+
+    @FXML
+    void cancelAction(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void saveTransport(ActionEvent event) {
+        Transport transport = new Transport();
+        transport.setBrand(fieldBrand.getText());
+        transport.setModel(fieldModel.getText());
+        transport.setNumber(fieldNumber.getText());
+        transport.setTypeFuel(comboBoxTypeFlue.getSelectionModel().getSelectedItem());
+        transport.setTypeTransport(comboBoxTypeTransport.getSelectionModel().getSelectedIndex());
+        transport.setStaticUseFuel(Double.parseDouble(fieldStaticUseFlue.getText()));
+        try {
+            transportsObservableList.add(transportService.save(transport));
+            cancelAction(event);
+        } catch (HibernateException | SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Помилка");
+            alert.setHeaderText("Помилка зберігання транспорту");
+            alert.setContentText("Можливо вже існує трансопорт з таким державним номерем");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    void initialize() {
+        transportsObservableList.setAll(transportService.getAllTransports());
+        initializeComboBoxTypeFuel();
+        comboBoxTypeTransport.setItems(FXCollections.observableArrayList("Грузоперевозка", "Спецтехніка"));
+        transportsListView.setItems(transportsObservableList);
+        transportsListView.setCellFactory(driverListView -> new ListCell<>() {
+            @Override
+            protected void updateItem(Transport item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getBrand() + "\n     "
+                            + item.getModel());
+                }
+            }
+        });
+
+
+        transportsListView.getSelectionModel().selectedItemProperty().addListener((observableValue, driver, t1) -> {
+            if (t1 != null) {
+                fieldBrand.setText(t1.getBrand());
+                fieldModel.setText(t1.getModel());
+                fieldNumber.setText(t1.getNumber());
+                comboBoxTypeTransport.setValue(t1.getTypeTransport() == 0 ? "Грузоперевозка" : "Спецтехніка");
+                comboBoxTypeFlue.setValue(t1.getTypeFuel());
+//                comboBoxTypeFlue.setValue();
+                fieldStaticUseFlue.setText(String.valueOf(t1.getStaticUseFuel()));
+
+                btnUpdateTransport.setDisable(false);
+                btnDeleteTransport.setDisable(false);
+                btnAddTransport.setDisable(true);
+            }
+        });
+
+        ChangeListener<String> changeListener = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (isEmpty()) {
+                    btnAddTransport.setDisable(true);
+                } else
+                    btnAddTransport.setDisable(false);
+            }
+        };
+        fieldStaticUseFlue.textProperty().addListener(changeListener);
+        fieldBrand.textProperty().addListener(changeListener);
+        fieldModel.textProperty().addListener(changeListener);
+        fieldNumber.textProperty().addListener(changeListener);
+        comboBoxTypeTransport.setOnAction(actionEvent -> {
+            if (isEmpty()) {
+                btnAddTransport.setDisable(true);
+            } else
+                btnAddTransport.setDisable(false);
+        });
+        comboBoxTypeFlue.setOnAction(actionEvent -> {
+            if (isEmpty()) {
+                btnAddTransport.setDisable(true);
+            } else
+                btnAddTransport.setDisable(false);
+        });
+    }
+
+    @FXML
+    void updateTransport(ActionEvent event) {
+        Transport transport = transportsListView.getFocusModel().getFocusedItem();
+        int index = transportsObservableList.indexOf(transport);
+        transport.setBrand(fieldBrand.getText());
+        transport.setModel(fieldModel.getText());
+        transport.setNumber(fieldNumber.getText());
+        transport.setTypeFuel(comboBoxTypeFlue.getSelectionModel().getSelectedItem());
+        transport.setTypeTransport(comboBoxTypeTransport.getSelectionModel().getSelectedIndex());
+        transport.setStaticUseFuel(Double.parseDouble(fieldStaticUseFlue.getText()));
+        transportsObservableList.set(index, transportService.updateTransport(transport));
+        transportsListView.refresh();
+        transportsListView.getSelectionModel().clearSelection();
+        fieldBrand.clear();
+        fieldModel.clear();
+        fieldNumber.clear();
+        comboBoxTypeTransport.getSelectionModel().clearSelection();
+        comboBoxTypeFlue.getSelectionModel().clearSelection();
+        fieldStaticUseFlue.clear();
+        btnUpdateTransport.setDisable(true);
+        btnDeleteTransport.setDisable(true);
+        btnAddTransport.setDisable(false);
+    }
+
+
+    @FXML
+    void deleteTransport(ActionEvent event) {
+        Transport transport = transportsListView.getFocusModel().getFocusedItem();
+        transportsObservableList.remove(transportService.deleteTransport(transport));
+        transportsListView.refresh();
+        transportsListView.getSelectionModel().clearSelection();
+        fieldBrand.clear();
+        fieldModel.clear();
+        fieldNumber.clear();
+        comboBoxTypeTransport.getSelectionModel().clearSelection();
+        comboBoxTypeFlue.getSelectionModel().clearSelection();
+        fieldStaticUseFlue.clear();
+        btnUpdateTransport.setDisable(true);
+        btnDeleteTransport.setDisable(true);
+        btnAddTransport.setDisable(false);
+    }
+
+    public boolean isEmpty() {
+        boolean empty;
+        if (fieldBrand.getText().isEmpty()
+                || fieldModel.getText().isEmpty()
+                || fieldNumber.getText().isEmpty()
+                || fieldStaticUseFlue.getText().isEmpty()
+                || comboBoxTypeTransport.getValue().isEmpty()
+                || comboBoxTypeFlue.getValue() == null) {
+            empty = true;
+        } else {
+            empty = false;
+        }
+        return empty;
+    }
+
+
+    private void initializeComboBoxTypeFuel() {
+        typeFuelObservableList.setAll(typeFuelService.getAllTypeFuel());
+        comboBoxTypeFlue.setItems(typeFuelObservableList);
+        comboBoxTypeFlue.setCellFactory(typeFuelListView -> new ListCell<>() {
+            @Override
+            protected void updateItem(TypeFuel item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName());
+                }
+            }
+        });
+
+    }
+
+}

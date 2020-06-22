@@ -1,13 +1,18 @@
 package com.regtrans.dao;
 
 import com.regtrans.model.Transport;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.sqlite.SQLiteException;
 
+import java.sql.SQLClientInfoException;
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 import java.util.List;
 
 @Transactional
@@ -37,12 +42,12 @@ public class TransportDao implements DaoInterface<Transport> {
     }
 
     @Override
-    public Transport save(Transport entity) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.saveOrUpdate(entity);
-        transaction.commit();
-        session.close();
+    public Transport save(Transport entity) throws SQLiteException {
+        try(Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.saveOrUpdate(entity);
+            transaction.commit();
+        }
         return entity;
     }
 
@@ -51,6 +56,16 @@ public class TransportDao implements DaoInterface<Transport> {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.delete(entity);
+        transaction.commit();
+        session.close();
+        return entity;
+    }
+
+    @Override
+    public Transport update(Transport entity) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(entity);
         transaction.commit();
         session.close();
         return entity;

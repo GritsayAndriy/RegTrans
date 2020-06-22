@@ -6,6 +6,7 @@ import com.regtrans.model.TimeSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.sqlite.SQLiteException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,11 +26,13 @@ public class TimeSheetService {
         return timeSheetDao.findAll();
     }
 
-    public TimeSheet save(TimeSheet timeSheet){
+    public TimeSheet save(TimeSheet timeSheet) throws SQLiteException {
         return timeSheetDao.save(timeSheet);
     }
 
     public TimeSheet unselectTimeSheet(TimeSheet timeSheet){
         return timeSheetDao.delete(timeSheet);
     }
+
+//    public void
 }

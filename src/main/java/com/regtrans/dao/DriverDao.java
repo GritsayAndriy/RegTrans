@@ -1,6 +1,7 @@
 package com.regtrans.dao;
 
 import com.regtrans.model.Driver;
+import com.regtrans.model.TimeSheet;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 @Repository("driverDao")
@@ -45,9 +47,16 @@ public class DriverDao implements DaoInterface<Driver>{
     }
 
     @Transactional(readOnly = true)
-    public List<Driver> getAllWithName() {
+    public List<Driver> getWithSomeMonthTimeSheet(String from, String to) {
         Session session = sessionFactory.openSession();
-        List<Driver> drivers = session.createNamedQuery("Driver.getAllWithName").list();
+        List<Driver> drivers = session.createNamedQuery("Driver.getWithSomeMonthTimeSheet").list();
+        for (Driver driver: drivers){
+            driver.setTimeSheets((List<TimeSheet>)  session.createNamedQuery("TimeSheet.getTimeSheetSomeMonthAndDriver")
+                    .setParameter("fromDay", from)
+                    .setParameter("toDay", to)
+                    .setParameter("driver", driver)
+                    .list());
+        }
         session.close();
         return drivers;
     }
@@ -67,6 +76,16 @@ public class DriverDao implements DaoInterface<Driver>{
         Session session = sessionFactory.openSession();
         Transaction tx1 = session.beginTransaction();
         session.delete(entity);
+        tx1.commit();
+        session.close();
+        return entity;
+    }
+
+    @Override
+    public Driver update(Driver entity){
+        Session session = sessionFactory.openSession();
+        Transaction tx1 = session.beginTransaction();
+        session.update(entity);
         tx1.commit();
         session.close();
         return entity;

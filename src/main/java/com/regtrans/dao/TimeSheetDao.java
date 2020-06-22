@@ -1,7 +1,9 @@
 package com.regtrans.dao;
 
+import com.regtrans.model.Driver;
 import com.regtrans.model.TimeSheet;
 import com.regtrans.model.Transport;
+import com.regtrans.model.TypeFuel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -64,6 +66,27 @@ public class TimeSheetDao implements DaoInterface<TimeSheet>{
         transaction.commit();
         session.close();
         return entity;
+    }
+
+    @Override
+    public TimeSheet update(TimeSheet entity) {
+        Session session = sessionFactory.openSession();
+        Transaction tx1 = session.beginTransaction();
+        session.update(entity);
+        tx1.commit();
+        session.close();
+        return entity;
+    }
+
+    public List<TimeSheet> getTimeSheetSomeMonth(String from, String to, TypeFuel typeFuel){
+        Session session = sessionFactory.openSession();
+        List timeSheets = session.createNamedQuery("TimeSheet.getTimeSheetSomeMonth")
+                .setParameter("fromDay", from)
+                .setParameter("toDay", to)
+                .setParameter("type", typeFuel)
+                .list();
+        session.close();
+        return timeSheets;
     }
 
 }

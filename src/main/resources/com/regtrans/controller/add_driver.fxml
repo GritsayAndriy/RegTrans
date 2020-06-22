@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="301.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.regtrans.controller.AddDriverController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clearSelection" prefHeight="388.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.regtrans.controller.EditDriverController">
    <children>
-      <ListView fx:id="listTransport" layoutX="72.0" layoutY="103.0" prefHeight="188.0" prefWidth="154.0" />
-      <TextField fx:id="fieldDriverName" layoutX="72.0" layoutY="48.0" prefHeight="25.0" prefWidth="154.0" />
-    <Button fx:id="btnEditTransport" layoutX="72.0" layoutY="291.0" mnemonicParsing="false" onAction="#openEditTransport" prefHeight="25.0" prefWidth="154.0" text="Редагувати транспорт" />
-      <Label layoutX="72.0" layoutY="23.0" text="П.І.Б." />
-      <Label layoutX="72.0" layoutY="80.0" text="Транспортний засіб" />
-      <Button fx:id="btnAddDriver" layoutX="72.0" layoutY="351.0" mnemonicParsing="false" onAction="#addDriver" prefHeight="25.0" prefWidth="70.0" text="Додати" />
-      <Button fx:id="btnCancel" layoutX="156.0" layoutY="351.0" mnemonicParsing="false" onAction="#cancelAddDriver" text="Відмінити" />
+      <TextField fx:id="fieldFatherName" layoutX="289.0" layoutY="147.0" prefHeight="25.0" prefWidth="162.0" />
+      <Label layoutX="289.0" layoutY="129.0" text="По батькові" />
+      <Label layoutX="289.0" layoutY="179.0" text="Транспортний засіб" />
+      <Button fx:id="btnAddDriver" disable="true" layoutX="285.0" layoutY="304.0" mnemonicParsing="false" onAction="#addDriver" prefHeight="25.0" prefWidth="74.0" text="Додати" />
+      <Button fx:id="btnCancel" layoutX="377.0" layoutY="304.0" mnemonicParsing="false" onAction="#cancelAddDriver" prefHeight="25.0" prefWidth="74.0" text="Відмінити" />
+      <Label layoutX="47.0" layoutY="32.0" text="Водії:" />
+      <VBox layoutX="47.0" layoutY="48.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="256.0" prefWidth="178.0">
+         <children>
+            <ListView fx:id="listDrivers" prefHeight="269.0" prefWidth="178.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+      <ComboBox fx:id="transportComboBox" layoutX="289.0" layoutY="202.0" prefHeight="25.0" prefWidth="162.0" />
+      <Button fx:id="btnEditTransport" layoutX="289.0" layoutY="241.0" mnemonicParsing="false" onAction="#openEditTransport" prefHeight="25.0" prefWidth="162.0" text="Редагування транспорту" />
+      <Button fx:id="btnDeleteDriver" disable="true" layoutX="157.0" layoutY="304.0" mnemonicParsing="false" onAction="#deleteDriver" text="Видалити" />
+      <Button fx:id="btnUpdateDriver" disable="true" layoutX="47.0" layoutY="304.0" mnemonicParsing="false" onAction="#updateDriver" prefHeight="25.0" prefWidth="68.0" text="Оновити" />
+      <Label layoutX="288.0" layoutY="32.0" text="Прізвище" />
+      <Label layoutX="289.0" layoutY="81.0" text="Ім'я" />
+      <TextField fx:id="fieldLastName" layoutX="288.0" layoutY="51.0" prefHeight="25.0" prefWidth="162.0" />
+      <TextField fx:id="fieldFirstName" layoutX="288.0" layoutY="97.0" prefHeight="25.0" prefWidth="162.0" />
    </children>
 </AnchorPane>

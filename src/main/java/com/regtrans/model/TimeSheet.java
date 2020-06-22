@@ -6,12 +6,25 @@ import java.text.SimpleDateFormat;
 
 @Entity
 @Table(name = "time_sheet")
+@NamedQueries({
+        @NamedQuery(name = "TimeSheet.getTimeSheetSomeMonth",
+        query = "select distinct ts from TimeSheet ts "
+                + "left join fetch ts.transport t "
+                + "where ts.dayDate>=:fromDay "
+                + "and ts.dayDate< :toDay "
+                + "and t.typeFuel = :type "),
+        @NamedQuery(name = "TimeSheet.getTimeSheetSomeMonthAndDriver",
+        query = "select distinct ts from TimeSheet ts "
+                + "where ts.dayDate>=:fromDay "
+                + "and ts.dayDate< :toDay "
+                + "and ts.driver = :driver")
+})
 public class TimeSheet {
 
     private int id;
     private String dayDate;
-    private int useFuel;
-    private int resultWork;
+    private double useFuel;
+    private double resultWork;
 
     private Driver driver;
     private Transport transport;
@@ -38,20 +51,20 @@ public class TimeSheet {
     }
 
     @Column(name = "use_fuel")
-    public int getUseFuel() {
+    public double getUseFuel() {
         return useFuel;
     }
 
-    public void setUseFuel(int useFuel) {
+    public void setUseFuel(double useFuel) {
         this.useFuel = useFuel;
     }
 
     @Column(name = "result_work")
-    public int getResultWork() {
+    public double getResultWork() {
         return resultWork;
     }
 
-    public void setResultWork(int resultWork) {
+    public void setResultWork(double resultWork) {
         this.resultWork = resultWork;
     }
 
