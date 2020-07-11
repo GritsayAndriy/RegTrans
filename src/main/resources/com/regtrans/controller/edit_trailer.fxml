@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import com.regtrans.controller.widgets.MaskField?>
+<AnchorPane maxHeight="400.0" maxWidth="435.0" minHeight="293.0" minWidth="379.0" prefHeight="293.0" prefWidth="379.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.regtrans.controller.TrailerController">
+   <children>
+      <Label layoutX="205.0" layoutY="16.0" text="Марка:" />
+      <TextField fx:id="fieldBrand" layoutX="205.0" layoutY="33.0" />
+      <Label layoutX="205.0" layoutY="73.0" text="Державний номер:" />
+      <MaskField mask="AADDDDAA" placeholder="XX0000YY" fx:id="fieldNumber" layoutX="205.0" layoutY="90.0" />
+      <Label layoutX="23.0" layoutY="16.0" text="Причіпи" />
+      <ListView fx:id="listViewTrailers" layoutX="23.0" layoutY="33.0" prefHeight="220.0" prefWidth="149.0" />
+      <Button fx:id="btnAdding" disable="true" layoutX="205.0" layoutY="253.0" mnemonicParsing="false" onAction="#addTrailer" prefHeight="25.0" prefWidth="61.0" text="Додати" />
+      <Button fx:id="btnCancel" layoutX="293.0" layoutY="253.0" mnemonicParsing="false" onAction="#cancel" text="Закрити" />
+      <Button fx:id="btnUpdate" disable="true" layoutX="23.0" layoutY="253.0" mnemonicParsing="false" onAction="#update" prefHeight="25.0" prefWidth="68.0" text="Оновити" />
+      <Button fx:id="btnDelete" disable="true" layoutX="104.0" layoutY="253.0" mnemonicParsing="false" onAction="#delete" text="Видалити" />
+   </children>
+</AnchorPane>

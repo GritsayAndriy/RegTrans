@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-@FxmlView("app2.fxml")
+@FxmlView("app.fxml")
 public class AppController {
 
     private final FxWeaver fxWeaver;
