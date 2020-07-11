@@ -2,18 +2,19 @@ package com.regtrans.config;
 
 import com.regtrans.dao.DaoInterface;
 import com.regtrans.dao.DriverDao;
-import com.regtrans.model.Driver;
-import com.regtrans.model.TimeSheet;
-import com.regtrans.model.Transport;
-import com.regtrans.model.TypeFuel;
+import com.regtrans.model.*;
 import com.regtrans.service.DriverService;
+import net.rgielen.fxweaver.core.FxWeaver;
+import net.rgielen.fxweaver.spring.SpringFxWeaver;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -30,6 +31,7 @@ public class AppConfig {
             configuration.addAnnotatedClass(Driver.class);
             configuration.addAnnotatedClass(TimeSheet.class);
             configuration.addAnnotatedClass(TypeFuel.class);
+            configuration.addAnnotatedClass(Trailer.class);
             StandardServiceRegistryBuilder builder =
                     new StandardServiceRegistryBuilder()
                             .applySettings(configuration.getProperties());
@@ -40,5 +42,12 @@ public class AppConfig {
         }
         return sessionFactory;
     }
+
+    @Bean
+    public Desktop getBeanDesktop(){
+        return Desktop.getDesktop();
+    }
+
+
 
 }

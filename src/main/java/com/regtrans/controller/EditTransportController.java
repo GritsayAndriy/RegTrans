@@ -1,5 +1,7 @@
 package com.regtrans.controller;
 
+import com.regtrans.controller.validation.Validation;
+import com.regtrans.controller.widgets.MaskField;
 import com.regtrans.model.Transport;
 import com.regtrans.model.TypeFuel;
 import com.regtrans.service.TransportService;
@@ -34,7 +36,7 @@ public class EditTransportController {
     private TextField fieldModel;
 
     @FXML
-    private TextField fieldNumber;
+    private MaskField fieldNumber;
 
     @FXML
     private ComboBox<String> comboBoxTypeTransport;
@@ -62,6 +64,7 @@ public class EditTransportController {
 
     private ObservableList<Transport> transportsObservableList = FXCollections.observableArrayList();
     private ObservableList<TypeFuel> typeFuelObservableList = FXCollections.observableArrayList();
+    private ObservableList<String> transportTypes = FXCollections.observableArrayList();
 
     @Autowired
     public EditTransportController(TransportService transportService, TypeFuelService typeFuelService) {
@@ -88,7 +91,6 @@ public class EditTransportController {
         transport.setStaticUseFuel(Double.parseDouble(fieldStaticUseFlue.getText()));
         try {
             transportsObservableList.add(transportService.save(transport));
-            cancelAction(event);
         } catch (HibernateException | SQLException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Помилка");
@@ -102,7 +104,8 @@ public class EditTransportController {
     void initialize() {
         transportsObservableList.setAll(transportService.getAllTransports());
         initializeComboBoxTypeFuel();
-        comboBoxTypeTransport.setItems(FXCollections.observableArrayList("Грузоперевозка", "Спецтехніка"));
+        initTransportTypes();
+
         transportsListView.setItems(transportsObservableList);
         transportsListView.setCellFactory(driverListView -> new ListCell<>() {
             @Override
@@ -123,11 +126,9 @@ public class EditTransportController {
                 fieldBrand.setText(t1.getBrand());
                 fieldModel.setText(t1.getModel());
                 fieldNumber.setText(t1.getNumber());
-                comboBoxTypeTransport.setValue(t1.getTypeTransport() == 0 ? "Грузоперевозка" : "Спецтехніка");
-                comboBoxTypeFlue.setValue(t1.getTypeFuel());
-//                comboBoxTypeFlue.setValue();
+                comboBoxTypeTransport.getSelectionModel().select(t1.getTypeTransport());
+                comboBoxTypeFlue.getSelectionModel().select(t1.getTypeFuel());
                 fieldStaticUseFlue.setText(String.valueOf(t1.getStaticUseFuel()));
-
                 btnUpdateTransport.setDisable(false);
                 btnDeleteTransport.setDisable(false);
                 btnAddTransport.setDisable(true);
@@ -137,6 +138,7 @@ public class EditTransportController {
         ChangeListener<String> changeListener = new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                validationFields(s,t1);
                 if (isEmpty()) {
                     btnAddTransport.setDisable(true);
                 } else
@@ -147,6 +149,7 @@ public class EditTransportController {
         fieldBrand.textProperty().addListener(changeListener);
         fieldModel.textProperty().addListener(changeListener);
         fieldNumber.textProperty().addListener(changeListener);
+
         comboBoxTypeTransport.setOnAction(actionEvent -> {
             if (isEmpty()) {
                 btnAddTransport.setDisable(true);
@@ -172,17 +175,7 @@ public class EditTransportController {
         transport.setTypeTransport(comboBoxTypeTransport.getSelectionModel().getSelectedIndex());
         transport.setStaticUseFuel(Double.parseDouble(fieldStaticUseFlue.getText()));
         transportsObservableList.set(index, transportService.updateTransport(transport));
-        transportsListView.refresh();
-        transportsListView.getSelectionModel().clearSelection();
-        fieldBrand.clear();
-        fieldModel.clear();
-        fieldNumber.clear();
-        comboBoxTypeTransport.getSelectionModel().clearSelection();
-        comboBoxTypeFlue.getSelectionModel().clearSelection();
-        fieldStaticUseFlue.clear();
-        btnUpdateTransport.setDisable(true);
-        btnDeleteTransport.setDisable(true);
-        btnAddTransport.setDisable(false);
+        resetForm();
     }
 
 
@@ -190,17 +183,7 @@ public class EditTransportController {
     void deleteTransport(ActionEvent event) {
         Transport transport = transportsListView.getFocusModel().getFocusedItem();
         transportsObservableList.remove(transportService.deleteTransport(transport));
-        transportsListView.refresh();
-        transportsListView.getSelectionModel().clearSelection();
-        fieldBrand.clear();
-        fieldModel.clear();
-        fieldNumber.clear();
-        comboBoxTypeTransport.getSelectionModel().clearSelection();
-        comboBoxTypeFlue.getSelectionModel().clearSelection();
-        fieldStaticUseFlue.clear();
-        btnUpdateTransport.setDisable(true);
-        btnDeleteTransport.setDisable(true);
-        btnAddTransport.setDisable(false);
+        resetForm();
     }
 
     public boolean isEmpty() {
@@ -233,7 +216,62 @@ public class EditTransportController {
                 }
             }
         });
+        comboBoxTypeFlue.getSelectionModel().select(0);
 
     }
+
+    private void initTransportTypes(){
+        transportTypes.setAll("Грузоперевозка", "Спецтехніка");
+        comboBoxTypeTransport.setItems(transportTypes);
+        comboBoxTypeTransport.getSelectionModel().select(0);
+    }
+
+    private void validationFields(String oldValue, String newValue) {
+        if (fieldBrand.getText().equals(newValue)) {
+            String text = fieldBrand.getText();
+            if (Validation.isLetters(newValue) && Validation.validateLength(text)) {
+                text = text.toUpperCase();
+                fieldBrand.setText(text);
+            } else {
+                fieldBrand.setText(oldValue);
+            }
+        } else if (fieldModel.getText().equals(newValue)) {
+            String text = fieldModel.getText();
+            if (Validation.isModel(text) && Validation.validateLength(text)) {
+                text = text.toUpperCase();
+                text = Validation.oneSpace(text);
+                fieldModel.setText(text);
+            } else {
+                fieldModel.setText(oldValue);
+            }
+        } else if (fieldNumber.getText().equals(newValue)) {
+            String text = fieldNumber.getText();
+            text = text.toUpperCase();
+            fieldNumber.setText(text);
+
+        } else if (fieldStaticUseFlue.getText().equals(newValue)) {
+            String text = fieldStaticUseFlue.getText();
+            if (Validation.isNumerical(newValue)) {
+                fieldStaticUseFlue.setText(text);
+            } else {
+                fieldStaticUseFlue.setText(oldValue);
+            }
+        }
+    }
+
+    public void resetForm(){
+        transportsListView.refresh();
+        transportsListView.getSelectionModel().clearSelection();
+        fieldBrand.clear();
+        fieldModel.clear();
+        fieldNumber.setPlaceholder("XX0000YY");
+        comboBoxTypeTransport.getSelectionModel().select(0);
+        comboBoxTypeFlue.getSelectionModel().select(0);
+        fieldStaticUseFlue.clear();
+        btnUpdateTransport.setDisable(true);
+        btnDeleteTransport.setDisable(true);
+        btnAddTransport.setDisable(true);
+    }
+
 
 }

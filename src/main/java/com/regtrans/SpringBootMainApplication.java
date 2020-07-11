@@ -19,9 +19,6 @@ public class SpringBootMainApplication {
 
     private static Logger logger = LoggerFactory.getLogger(SpringBootMainApplication.class);
 
-    @Autowired
-    DriverService driverService;
-
     public static void main(String[] args) {
         Application.launch(JavaFxApplication.class, args);
     }

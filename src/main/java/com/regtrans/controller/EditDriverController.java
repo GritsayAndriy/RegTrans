@@ -1,5 +1,6 @@
 package com.regtrans.controller;
 
+import com.regtrans.controller.validation.Validation;
 import com.regtrans.model.Driver;
 import com.regtrans.model.Transport;
 import com.regtrans.service.DriverService;
@@ -83,6 +84,7 @@ public class EditDriverController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.showAndWait();
+        resetForm();
     }
 
     @FXML
@@ -93,15 +95,12 @@ public class EditDriverController {
         driver.setFatherName(fieldFatherName.getText());
         driver.setTransport(transportComboBox.getSelectionModel().getSelectedItem());
         driversObservableList.add(driverService.saveDriver(driver));
-        clearField();
-        transportComboBox.getSelectionModel().clearSelection();
+        resetForm();
 
     }
 
     @FXML
     void cancelAddDriver(ActionEvent event) {
-//        transportsObservableList.clear();
-//        driversObservableList.clear();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -122,6 +121,7 @@ public class EditDriverController {
                 }
             }
         });
+        transportComboBox.getSelectionModel().select(0);
 
         driversObservableList.setAll(driverService.getAllDrivers());
         listDrivers.setItems(driversObservableList);
@@ -154,6 +154,7 @@ public class EditDriverController {
         fieldLastName.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                validationFields(s,t1);
                 if (!t1.isEmpty() && checkFields()) {
                     btnAddDriver.setDisable(false);
                 } else
@@ -164,6 +165,7 @@ public class EditDriverController {
         fieldFirstName.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                validationFields(s,t1);
                 if (!t1.isEmpty() && checkFields()) {
                     btnAddDriver.setDisable(false);
                 } else
@@ -174,6 +176,7 @@ public class EditDriverController {
         fieldFatherName.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                validationFields(s,t1);
                 if (!t1.isEmpty() && checkFields()) {
                     btnAddDriver.setDisable(false);
                 } else
@@ -193,13 +196,7 @@ public class EditDriverController {
     void deleteDriver(ActionEvent event) {
         Driver driver = listDrivers.getFocusModel().getFocusedItem();
         driversObservableList.remove(driverService.deleteDriver(driver));
-        listDrivers.refresh();
-        listDrivers.getSelectionModel().clearSelection();
-        clearField();
-        transportComboBox.getSelectionModel().clearSelection();
-        btnUpdateDriver.setDisable(true);
-        btnDeleteDriver.setDisable(true);
-        btnAddDriver.setDisable(false);
+        resetForm();
     }
 
     @FXML
@@ -211,13 +208,7 @@ public class EditDriverController {
         driver.setFatherName(fieldFatherName.getText());
         driver.setTransport(transportComboBox.getSelectionModel().getSelectedItem());
         driversObservableList.set(index, driverService.updateDriver(driver));
-        listDrivers.refresh();
-        listDrivers.getSelectionModel().clearSelection();
-        clearField();
-        transportComboBox.getSelectionModel().clearSelection();
-        btnUpdateDriver.setDisable(true);
-        btnDeleteDriver.setDisable(true);
-        btnAddDriver.setDisable(false);
+        resetForm();
     }
 
     @FXML
@@ -243,6 +234,46 @@ public class EditDriverController {
         } else {
             fieldsIsEmpty = false;
             return true;
+        }
+    }
+
+    private void resetForm(){
+        transportsObservableList.setAll(transportService.getAllTransports());
+        driversObservableList.setAll(driverService.getAllDrivers());
+        listDrivers.getSelectionModel().clearSelection();
+        listDrivers.refresh();
+        clearField();
+        transportComboBox.getSelectionModel().select(0);
+        btnUpdateDriver.setDisable(true);
+        btnDeleteDriver.setDisable(true);
+        btnAddDriver.setDisable(true);
+    }
+
+    private void validationFields(String oldValue, String newValue) {
+        if (fieldLastName.getText().equals(newValue)) {
+            String text = fieldLastName.getText();
+            if (Validation.isLetters(newValue) && Validation.validateLength(text)) {
+                text = Validation.capitalize(text);
+                fieldLastName.setText(text);
+            } else {
+                fieldLastName.setText(oldValue);
+            }
+        } else if (fieldFirstName.getText().equals(newValue)) {
+            String text = fieldFirstName.getText();
+            if (Validation.isLetters(text) && Validation.validateLength(text)) {
+                text = Validation.capitalize(text);
+                fieldFirstName.setText(text);
+            } else {
+                fieldFirstName.setText(oldValue);
+            }
+        } else if (fieldFatherName.getText().equals(newValue)) {
+            String text = fieldFatherName.getText();
+            if (Validation.isLetters(text) && Validation.validateLength(text)) {
+                text = Validation.capitalize(text);
+                fieldFatherName.setText(text);
+            } else {
+                fieldFatherName.setText(oldValue);
+            }
         }
     }
 }

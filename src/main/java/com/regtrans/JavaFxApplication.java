@@ -1,7 +1,6 @@
 package com.regtrans;
 
 import com.regtrans.controller.AppController;
-import com.regtrans.service.DriverService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
@@ -20,6 +19,7 @@ public class JavaFxApplication extends Application {
         String[] args = getParameters().getRaw().toArray(new String[0]);
         this.applicationContext = new SpringApplicationBuilder()
                 .sources(SpringBootMainApplication.class)
+                .headless(false)
                 .run(args);
     }
 
@@ -27,6 +27,7 @@ public class JavaFxApplication extends Application {
     public void start(Stage stage) throws Exception {
         FxWeaver fxWeaver = applicationContext.getBean(FxWeaver.class);
         Parent root = fxWeaver.loadView(AppController.class);
+
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -38,4 +39,6 @@ public class JavaFxApplication extends Application {
         this.applicationContext.close();
         Platform.exit();
     }
+
+
 }

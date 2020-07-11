@@ -103,7 +103,6 @@ public class Transport {
 
 
     @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
-
     public Set<Driver> getDrivers() {
         return drivers;
     }
@@ -122,7 +121,6 @@ public class Transport {
         getDrivers().remove(driver);
     }
 
-/*
     @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<TimeSheet> getTimeSheets() {
         return timeSheets;
@@ -142,7 +140,6 @@ public class Transport {
     }
 
 
- */
     @Override
     public String toString() {
         return getBrand()+" "+ getModel();

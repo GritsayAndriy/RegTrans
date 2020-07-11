@@ -24,19 +24,33 @@ CREATE TABLE drivers (
     FOREIGN KEY (transport) REFERENCES tansports(transport_id)
 );
 
+CREATE TABLE trailer (
+    trailer_id INTEGER PRIMARY KEY,
+    brand TEXT NOT NULL,
+    number TEXT NOT NULL
+);
+
 CREATE TABLE time_sheet (
     id INTEGER PRIMARY KEY,
     day_date DATE NOT NULL,
     driver INTEGER NOT NULL REFERENCES drivers(driver_id),
     transport INTEGER NOT NULL  REFERENCES tansports(transport_id),
     use_fuel DOUBLE,
-    result_work DOUBLE
+    result_work DOUBLE,
+    trailer INTEGER REFERENCES trailer(trailer_id)
 );
+
+
+
+
+ALTER TABLE time_sheet
+ADD trailer INTEGER REFERENCES trailer(trailer_id);
 
 select * from time_sheet;
 select * from drivers;
 select * from transports;
 select * from type_fuel;
+select * from trailer;
 
 
 drop table transports;
@@ -73,4 +87,4 @@ insert into drivers (full_name, transport)
 values("Andriy", "1");
 
 DELETE FROM drivers WHERE driver_id=1;
-DELETE FROM time_sheet WHERE id=1;
+DELETE FROM time_sheet WHERE id=3;

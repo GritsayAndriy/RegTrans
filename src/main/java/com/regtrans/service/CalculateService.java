@@ -7,8 +7,6 @@ import com.regtrans.model.TypeTransportsRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 @Service("calculateService")
@@ -56,7 +54,7 @@ public class CalculateService {
                         .getStaticUseFuel();
 
                 if (timeSheet.getTransport().getTypeTransport() == 0) {
-                    maxFuelConsumptionRateForDay = TypeTransportsRate.FREIGHT
+                    maxFuelConsumptionRateForDay = TypeTransportsRate.TRUCK
                             .maxFuelConsumptionRateForDay(fuelConsumptionRate);
                 } else
                     maxFuelConsumptionRateForDay = TypeTransportsRate.SPECIAL.
@@ -72,8 +70,7 @@ public class CalculateService {
 
                     totalFuel -= randomForUseFuel;
 
-                    timeSheet.setUseFuel(
-                            Decimal.cleaningExtra(timeSheet.getUseFuel() + randomForUseFuel));
+                    timeSheet.setUseFuel(timeSheet.getUseFuel() + randomForUseFuel);
                     totalFuel = Decimal.cleaningExtra(totalFuel);
                 }
             }
@@ -88,7 +85,7 @@ public class CalculateService {
             double useFuelForDay = timeSheet.
                     getUseFuel();
             if (timeSheet.getTransport().getTypeTransport() == 0) {
-                timeSheet.setResultWork(TypeTransportsRate.FREIGHT
+                timeSheet.setResultWork(TypeTransportsRate.TRUCK
                         .calculateResultWork(fuelConsumptionRate, useFuelForDay));
             } else
                 timeSheet.setResultWork(TypeTransportsRate.SPECIAL
@@ -130,13 +127,13 @@ public class CalculateService {
                     .getTransport()
                     .getStaticUseFuel();
             if (timeSheet.getTransport().getTypeTransport() == 0) {
-                maxFuelConsumptionRate += TypeTransportsRate.FREIGHT
+                maxFuelConsumptionRate += TypeTransportsRate.TRUCK
                         .maxFuelConsumptionRateForDay(fuelConsumptionRate);
             } else
                 maxFuelConsumptionRate += TypeTransportsRate.SPECIAL.
                         maxFuelConsumptionRateForDay(fuelConsumptionRate);
         }
-        return maxFuelConsumptionRate;
+        return Decimal.cleaningExtra(maxFuelConsumptionRate);
     }
 
     public double calculateMax(String fuel, String from, String to) {

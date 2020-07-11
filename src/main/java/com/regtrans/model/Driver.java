@@ -80,17 +80,9 @@ public class Driver implements Serializable {
         this.fatherName = fatherName;
     }
 
-//    public String getFullName() {
-//        return lastName +" "+ firstName + " " + fatherName;
-//    }
-
     public void setDriverId(int driverId) {
         this.driverId = driverId;
     }
-
-//    public void setFullName(String fullName) {
-//        this.fullName = fullName;
-//    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transport")

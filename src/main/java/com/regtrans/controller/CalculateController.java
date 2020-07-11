@@ -105,6 +105,7 @@ public class CalculateController {
         alert.setHeaderText(message);
         alert.setContentText("Введіть менше значення, або додайте ще робичих днів");
         alert.showAndWait();
+        initialize();
     }
 
     public void calculate(String fuel, double totalFuel) {
@@ -122,4 +123,5 @@ public class CalculateController {
         proIndAlert = new ProgressIndicatorAlert(node.getScene().getWindow(), "Зачекайте, йде завантаження даних...");
         proIndAlert.start(calculation);
     }
+
 }

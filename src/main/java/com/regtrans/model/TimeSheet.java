@@ -28,8 +28,7 @@ public class TimeSheet {
 
     private Driver driver;
     private Transport transport;
-
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private Trailer trailer;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +65,16 @@ public class TimeSheet {
 
     public void setResultWork(double resultWork) {
         this.resultWork = resultWork;
+    }
+
+    @ManyToOne()
+    @JoinColumn(name = "trailer")
+    public Trailer getTrailer() {
+        return trailer;
+    }
+
+    public void setTrailer(Trailer trailer) {
+        this.trailer = trailer;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
