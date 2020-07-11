@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TableView?>
@@ -66,41 +67,9 @@
                </BorderPane.margin>
             </FlowPane>
          </top>
-         <center>
-            <ScrollPane fx:id="scrollTimeSheet" fitToHeight="true" fitToWidth="true" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
-               <content>
-                  <AnchorPane fx:id="timeSheetPane">
-                     <children>
-                        <TableView fx:id="tableTimeSheet" fixedCellSize="0.0" focusTraversable="false" layoutX="0" pickOnBounds="false" prefHeight="498.0" prefWidth="415.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy></TableView>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </ScrollPane>
-         </center>
          <right>
             <HBox prefHeight="497.0" BorderPane.alignment="CENTER">
                <children>
-                  <ScrollPane fx:id="scrollResult" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxWidth="-Infinity" prefHeight="497.0" prefWidth="150.0">
-                    <content>
-                      <AnchorPane fx:id="resultPane">
-                           <children>
-                              <TableView fx:id="tableResult" cache="true" cacheHint="SCALE_AND_ROTATE" fixedCellSize="0.0" focusTraversable="false" mouseTransparent="true" prefHeight="515.0" prefWidth="127.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy></TableView>
-                           </children>
-                        </AnchorPane>
-                    </content>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <padding>
-                        <Insets bottom="13.5" />
-                     </padding>
-                  </ScrollPane>
                   <VBox prefHeight="477.0" prefWidth="116.0">
                      <children>
                         <Label text="Витрати пального" />
@@ -171,36 +140,65 @@
                </padding>
             </HBox>
          </right>
-         <left>
-            <ScrollPane fx:id="scrollTableDrivers" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
-              <content>
-                <AnchorPane fx:id="drivePane">
-                     <children>
-                        <TableView fx:id="tableViewDrivers" fixedCellSize="0.0" focusTraversable="false" mouseTransparent="true" prefHeight="512.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy></TableView>
-                     </children>
-                  </AnchorPane>
-              </content>
-               <BorderPane.margin>
-                  <Insets left="20.0" />
-               </BorderPane.margin>
-               <padding>
-                  <Insets bottom="13.5" top="0.5" />
-               </padding>
-            </ScrollPane>
-         </left>
          <VBox.margin>
             <Insets />
          </VBox.margin>
          <bottom>
             <AnchorPane BorderPane.alignment="CENTER">
                <BorderPane.margin>
-                  <Insets bottom="30.0" />
+                  <Insets bottom="30.0" left="20.0" />
                </BorderPane.margin>
             </AnchorPane>
          </bottom>
+         <center>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                     <children>
+                        <ScrollPane fx:id="scrollTableDrivers" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="200.0" vbarPolicy="NEVER">
+                           <content>
+                              <AnchorPane fx:id="drivePane">
+                                 <children>
+                                    <TableView fx:id="tableViewDrivers" fixedCellSize="0.0" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mouseTransparent="true" prefHeight="600.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                        <ScrollPane fx:id="scrollTimeSheet" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" hmax="30.0" vbarPolicy="NEVER">
+                           <content>
+                              <AnchorPane fx:id="timeSheetPane">
+                                 <children>
+                                    <TableView fx:id="tableTimeSheet" fixedCellSize="0.0" focusTraversable="false" layoutX="0" pickOnBounds="false" prefHeight="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                        <ScrollPane fx:id="scrollResult" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="135.0" HBox.hgrow="ALWAYS">
+                           <content>
+                              <AnchorPane fx:id="resultPane">
+                                 <children>
+                                    <TableView fx:id="tableResult" cache="true" cacheHint="SCALE_AND_ROTATE" fixedCellSize="0.0" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="135.0" minWidth="130.0" mouseTransparent="true" prefHeight="600.0" prefWidth="127.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </HBox>
+                  <ScrollBar fx:id="scrollBarTable" max="30.0" visibleAmount="3.0" />
+               </children>
+               <BorderPane.margin>
+                  <Insets left="20.0" />
+               </BorderPane.margin>
+            </VBox>
+         </center>
       </BorderPane>
   </children>
 </VBox>
